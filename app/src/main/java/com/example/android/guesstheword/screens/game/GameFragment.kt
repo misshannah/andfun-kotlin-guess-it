@@ -67,10 +67,16 @@ class GameFragment : Fragment() {
             binding.scoreText.text = newScore.toString()
         })
 
-        // TODO (04) Add an observer of eventGameFinish which, when eventGameFinish is true,
+        // DONE (04) Add an observer of eventGameFinish which, when eventGameFinish is true,
         // performs the code in gameFinished()
         // Make sure to call onGameFinishCompete to tell your viewmodel that the game finish event
         // was dealt with
+
+        viewModel.eventGameFinish.observe(this, Observer { hasFinished ->
+            if (hasFinished) {
+                gameFinished()
+            }
+        })
 
         return binding.root
 
@@ -80,9 +86,9 @@ class GameFragment : Fragment() {
      * Called when the game is finished
      */
     fun gameFinished() {
-        val currentScore = viewModel.score.value ?: 0
-        val action = GameFragmentDirections.actionGameToScore(currentScore)
-        findNavController(this).navigate(action)
+//        val currentScore = viewModel.score.value ?: 0
+//        val action = GameFragmentDirections.actionGameToScore(currentScore)
+//        findNavController(this).navigate(action)
     }
 
 }
