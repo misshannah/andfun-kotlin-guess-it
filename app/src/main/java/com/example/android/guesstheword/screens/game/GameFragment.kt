@@ -24,10 +24,12 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment.findNavController
 import com.example.android.guesstheword.R
 import com.example.android.guesstheword.databinding.GameFragmentBinding
+import java.util.EnumSet.of
+import java.util.Optional.of
 
 /**
  * Fragment where the game is played
@@ -50,27 +52,24 @@ class GameFragment : Fragment() {
         )
 
         // Get the viewmodel
-        viewModel = ViewModelProviders.of(this).get(GameViewModel::class.java)
 
-        // TODO (03) Pass the GameViewModel into the data binding - then you can remove the
+        // DONE (03) Pass the GameViewModel into the data binding - then you can remove the
         // OnClickListener setup from here
-        binding.correctButton.setOnClickListener {
-            viewModel.onCorrect()
-        }
-        binding.skipButton.setOnClickListener {
-            viewModel.onSkip()
-        }
+        viewModel = ViewModelProvider(this).get(GameViewModel::class.java)
 
+        // Set the viewmodel for databinding - this allows the bound layout access to all of the
+        // data in the VieWModel
+        binding.gameViewModel = viewModel
         /** Setting up LiveData observation relationship **/
-        viewModel.word.observe(this, Observer { newWord ->
+        viewModel.word.observe(viewLifecycleOwner, Observer { newWord ->
             binding.wordText.text = newWord
         })
 
-        viewModel.score.observe(this, Observer { newScore ->
+        viewModel.score.observe(viewLifecycleOwner, Observer { newScore ->
             binding.scoreText.text = newScore.toString()
         })
 
-        viewModel.currentTime.observe(this, Observer { newTime ->
+        viewModel.currentTime.observe(viewLifecycleOwner, Observer { newTime ->
             binding.timerText.text = DateUtils.formatElapsedTime(newTime)
 
         })
@@ -88,5 +87,6 @@ class GameFragment : Fragment() {
         return binding.root
 
     }
+
 
 }

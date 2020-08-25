@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
@@ -54,11 +55,16 @@ class ScoreFragment : Fragment() {
         val scoreFragmentArgs by navArgs<ScoreFragmentArgs>()
 
         viewModelFactory = ScoreViewModelFactory(scoreFragmentArgs.score)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+
+
+        // DONE (06) Pass the ScoreViewModel into the data binding - then you can remove the
+        // OnClickListener setup for playAgainButton from here
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(ScoreViewModel::class.java)
 
         // TODO (06) Pass the ScoreViewModel into the data binding - then you can remove the
         // OnClickListener setup for playAgainButton from here
+        binding.scoreViewModel = viewModel
 
         // Add observer for score
         viewModel.score.observe(this, Observer { newScore ->
